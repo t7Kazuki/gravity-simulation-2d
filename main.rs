@@ -6,13 +6,13 @@ const FRAME_DELAY_MS: u64 = 250;
 const G: f64 = 0.5;
 
 struct Object {
-m: f64,
-x: f64,
-y: f64,
-v_x: f64,
-v_y: f64,
-a_x: f64,
-a_y: f64,
+    m: f64,
+    x: f64,
+    y: f64,
+    v_x: f64,
+    v_y: f64,
+    a_x: f64,
+    a_y: f64,
 }
 
 fn main() {
@@ -82,14 +82,13 @@ loop {
 }
 
 fn displacement(a: &Object, b: &Object) -> (f64, f64) {
-let size = WORLD_SIZE as f64;
-let half = size / 2.0;
-
-let dx = (b.x - a.x + half).rem_euclid(size) - half;
-let dy = (b.y - a.y + half).rem_euclid(size) - half;
-
-(dx, dy)
-
+    let size = WORLD_SIZE as f64;
+    let half = size / 2.0;
+    
+    let dx = (b.x - a.x + half).rem_euclid(size) - half;
+    let dy = (b.y - a.y + half).rem_euclid(size) - half;
+    
+    (dx, dy)
 }
 
 fn gravity(dx: f64, dy: f64, m: f64) -> [f64; 2] {
@@ -109,39 +108,37 @@ fn gravity(dx: f64, dy: f64, m: f64) -> [f64; 2] {
 }
 
 fn mov(
-object: &mut Object,
-frame: &mut [[u8; WORLD_SIZE]; WORLD_SIZE],
-dt: f64,
-) {
-object.v_x += object.a_x * dt;
-object.v_y += object.a_y * dt;
-
-object.x += object.v_x * dt;
-object.y += object.v_y * dt;
-
-let size = WORLD_SIZE as f64;
-object.x = object.x.rem_euclid(size);
-object.y = object.y.rem_euclid(size);
-
-let x = (object.x.floor() as usize).min(WORLD_SIZE - 1);
-let y = (object.y.floor() as usize).min(WORLD_SIZE - 1);
-
-frame[y][x] = 1;
-
+    object: &mut Object,
+    frame: &mut [[u8; WORLD_SIZE]; WORLD_SIZE],
+    dt: f64,
+    ){
+    object.v_x += object.a_x * dt;
+    object.v_y += object.a_y * dt;
+    
+    object.x += object.v_x * dt;
+    object.y += object.v_y * dt;
+    
+    let size = WORLD_SIZE as f64;
+    object.x = object.x.rem_euclid(size);
+    object.y = object.y.rem_euclid(size);
+    
+    let x = (object.x.floor() as usize).min(WORLD_SIZE - 1);
+    let y = (object.y.floor() as usize).min(WORLD_SIZE - 1);
+    
+    frame[y][x] = 1;
 }
 
 fn print_frame(frame: &[[u8; WORLD_SIZE]; WORLD_SIZE]) {
-for row in frame {
-for cell in row {
-let symbol = match cell {
-0 => '.',
-1 => 'O',
-_ => '?',
-};
+    for row in frame {
+        for cell in row {
+            let symbol = match cell {   
+                0 => '.',
+                1 => 'O',
+                _ => '?',
+             };
 
-        print!("{symbol} ");
+            print!("{symbol} ");
+        }
+        println!();
     }
-
-    println!();
-}
 }
